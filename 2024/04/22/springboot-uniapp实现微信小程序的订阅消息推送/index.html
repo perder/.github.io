@@ -1,0 +1,228 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>springboot+uniapp实现微信小程序的订阅消息推送 | perder的博客</title><meta name="author" content="perder"><meta name="copyright" content="perder"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="使用场景比如当用户下了订单，这时候应该告诉用户订单的状态发生了改变之类的消息。但是网上的博客不是解释不清，就是在复制黏贴，你搜小程序推送却跟你说公众号推送，所以写一篇博客来解决自己如何解决。 微信公众平台选择模板进入公众平台后  选择功能-&gt;订阅消息  然后选择公共模板选择一次性订阅，然后去选择你所要的模板。之后模板会生成一个 id，以及所需要的参数   引入 springboot 的 WX">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot+uniapp实现微信小程序的订阅消息推送">
+<meta property="og:url" content="http://perder.github.io/2024/04/22/springboot-uniapp%E5%AE%9E%E7%8E%B0%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%AE%A2%E9%98%85%E6%B6%88%E6%81%AF%E6%8E%A8%E9%80%81/index.html">
+<meta property="og:site_name" content="perder的博客">
+<meta property="og:description" content="使用场景比如当用户下了订单，这时候应该告诉用户订单的状态发生了改变之类的消息。但是网上的博客不是解释不清，就是在复制黏贴，你搜小程序推送却跟你说公众号推送，所以写一篇博客来解决自己如何解决。 微信公众平台选择模板进入公众平台后  选择功能-&gt;订阅消息  然后选择公共模板选择一次性订阅，然后去选择你所要的模板。之后模板会生成一个 id，以及所需要的参数   引入 springboot 的 WX">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://perder.github.io/images/staticImg/avatar.jpg">
+<meta property="article:published_time" content="2024-04-22T03:23:28.000Z">
+<meta property="article:modified_time" content="2024-04-22T03:58:41.010Z">
+<meta property="article:author" content="perder">
+<meta property="article:tag" content="springbooot,uniapp,微信推送">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://perder.github.io/images/staticImg/avatar.jpg"><link rel="shortcut icon" href="/images/staticImg/avatar.jpg"><link rel="canonical" href="http://perder.github.io/2024/04/22/springboot-uniapp%E5%AE%9E%E7%8E%B0%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%AE%A2%E9%98%85%E6%B6%88%E6%81%AF%E6%8E%A8%E9%80%81/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: perder","link":"链接: ","source":"来源: perder的博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'springboot+uniapp实现微信小程序的订阅消息推送',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-22 11:58:41'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/staticImg/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 档案</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categorisecategories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/staticImg/bg.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="perder的博客"><span class="site-name">perder的博客</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 档案</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categorisecategories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">springboot+uniapp实现微信小程序的订阅消息推送</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-22T03:23:28.000Z" title="发表于 2024-04-22 11:23:28">2024-04-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-22T03:58:41.010Z" title="更新于 2024-04-22 11:58:41">2024-04-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/">微信小程序</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="springboot+uniapp实现微信小程序的订阅消息推送"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>比如当用户下了订单，这时候应该告诉用户订单的状态发生了改变之类的消息。但是网上的博客不是解释不清，就是在复制黏贴，你搜小程序推送却跟你说公众号推送，所以写一篇博客来解决自己如何解决。</p>
+<h2 id="微信公众平台选择模板"><a href="#微信公众平台选择模板" class="headerlink" title="微信公众平台选择模板"></a>微信公众平台选择模板</h2><p>进入公众平台后</p>
+<blockquote>
+<p>选择功能-&gt;订阅消息</p>
+</blockquote>
+<p>然后选择公共模板选择一次性订阅，然后去选择你所要的模板。之后模板会生成一个 id，以及所需要的参数</p>
+<img src="/images/uniapp/tempId.JPG" class="" title="模板" alt="模板">
+
+<h2 id="引入-springboot-的-WXJava-依赖"><a href="#引入-springboot-的-WXJava-依赖" class="headerlink" title="引入 springboot 的 WXJava 依赖"></a>引入 springboot 的 WXJava 依赖</h2><p>WxJava 封装了许多关于微信公众号、小程序的各种操作，简便了开发。<a target="_blank" rel="noopener" href="https://github.com/Wechat-Group/WxJava">WxJava 文档</a></p>
+<p>因为我们是要开发微信小程序的推送服务，所以我们需要引入 WxJava 中微信小程序的依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.binarywang<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>weixin-java-miniapp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>引入之后我们可以开始编写如何推送的代码</p>
+<h2 id="springboot-代码编写"><a href="#springboot-代码编写" class="headerlink" title="springboot 代码编写"></a>springboot 代码编写</h2><p>这里我以订单为参考</p>
+<p><strong>请求相关代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">GetMapping(<span class="string">&quot;/changeOrderState&quot;</span>)</span><br><span class="line">    <span class="keyword">public</span> ResultBase <span class="title function_">changeOrderState</span><span class="params">(<span class="meta">@RequestParam</span> String orderId, <span class="meta">@RequestParam</span> String orderState)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> orderService.changeOrderState(orderState, orderId);</span><br><span class="line">        <span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> orderService.getOrderByOrderId(orderId); <span class="comment">// 获取修改后的order</span></span><br><span class="line"></span><br><span class="line">        BaseUtil.putWxMessage(order, orderState); <span class="comment">//这个是我编写的一个工具类</span></span><br><span class="line"></span><br><span class="line">        Map&lt;String, Object&gt; result = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span> (i &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            result.put(<span class="string">&quot;isOK&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">            <span class="keyword">return</span> ResultBase.success(result);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            result.put(<span class="string">&quot;isOK&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">            <span class="keyword">return</span> ResultBase.success(result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>工具类代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">putWxMessage</span><span class="params">(Order order, String status)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (status.equals(<span class="string">&quot;待收货&quot;</span>)) &#123;</span><br><span class="line">            <span class="comment">// 1，配置</span></span><br><span class="line">            <span class="type">WxMaDefaultConfigImpl</span> <span class="variable">wxStorage</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">WxMaDefaultConfigImpl</span>();</span><br><span class="line">            wxStorage.setAppid(<span class="string">&quot;你的小程序app&quot;</span>);<span class="comment">// appid</span></span><br><span class="line">            wxStorage.setSecret(<span class="string">&quot;你的密钥&quot;</span>);<span class="comment">// appsecret</span></span><br><span class="line">            <span class="type">WxMaService</span> <span class="variable">wxMaService</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">WxMaServiceImpl</span>();</span><br><span class="line">            wxMaService.setWxMaConfig(wxStorage);</span><br><span class="line">            <span class="comment">//WxJava会自动帮我们获取微信的token并且会自动刷新。</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 2,推送消息</span></span><br><span class="line">            <span class="type">WxMaSubscribeMessage</span> <span class="variable">subscribeMessage</span> <span class="operator">=</span> WxMaSubscribeMessage.builder()</span><br><span class="line">                    .toUser(order.getUserId()) <span class="comment">//这个是用户的openId具体如何获取微信的openId这里不细说</span></span><br><span class="line">                    .templateId(<span class="string">&quot;前面我们选择的模板ID&quot;</span>)</span><br><span class="line">                    .lang(<span class="string">&quot;zh_CN&quot;</span>) <span class="comment">//字符格式这里可以去看小程序的文档</span></span><br><span class="line">                    .page(<span class="string">&quot;/pages/order/order?orderId=&quot;</span>+order.getOrderId()) <span class="comment">//这里是预定信息下面查看详情跳转的小程序要页面</span></span><br><span class="line">                    .miniprogramState(<span class="string">&quot;developer&quot;</span>) <span class="comment">//环境，具体参考小程序文档</span></span><br><span class="line">                    .build();</span><br><span class="line"></span><br><span class="line">            <span class="comment">//这里就是在设置模板中的各种参数，这里的phone_number25、thing1都是我们生成模板中自带的。</span></span><br><span class="line">            subscribeMessage.addData(<span class="keyword">new</span> <span class="title class_">WxMaSubscribeMessage</span>.MsgData(<span class="string">&quot;phone_number25&quot;</span>, <span class="string">&quot;05937777771&quot;</span>));</span><br><span class="line">            subscribeMessage.addData(<span class="keyword">new</span> <span class="title class_">WxMaSubscribeMessage</span>.MsgData(<span class="string">&quot;thing1&quot;</span>, order.getOrderItems().size() + <span class="string">&quot;个菜品&quot;</span>));</span><br><span class="line">            subscribeMessage.addData(<span class="keyword">new</span> <span class="title class_">WxMaSubscribeMessage</span>.MsgData(<span class="string">&quot;date3&quot;</span>, order.getCreateTime()));</span><br><span class="line">            subscribeMessage.addData(<span class="keyword">new</span> <span class="title class_">WxMaSubscribeMessage</span>.MsgData(<span class="string">&quot;phrase2&quot;</span>, order.getOrderState()));</span><br><span class="line">            <span class="keyword">if</span> (order.getReceivingGoods().equals(<span class="string">&quot;到店自取&quot;</span>)) &#123;</span><br><span class="line">                subscribeMessage.addData(<span class="keyword">new</span> <span class="title class_">WxMaSubscribeMessage</span>.MsgData(<span class="string">&quot;thing5&quot;</span>, <span class="string">&quot;您的商品完成了，请及时取餐&quot;</span>));</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                subscribeMessage.addData(<span class="keyword">new</span> <span class="title class_">WxMaSubscribeMessage</span>.MsgData(<span class="string">&quot;thing5&quot;</span>, <span class="string">&quot;您的商品完成了，请等待配送&quot;</span>));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 发起推送</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                wxMaService.getSubscribeService().sendSubscribeMsg(subscribeMessage); <span class="comment">//我们直接调用WxJava中小程序的sendSubscribeMsg方法并将我们的模板信息传递进去，接着我们就能收到信息了。</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;推送失败：&quot;</span> + e.getMessage());</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//.....这里省略点代码</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="uniapp-授权订阅"><a href="#uniapp-授权订阅" class="headerlink" title="uniapp 授权订阅"></a>uniapp 授权订阅</h2><p><strong>核心代码</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">uni.<span class="title function_">requestSubscribeMessage</span>(&#123;</span><br><span class="line">  <span class="attr">tmplIds</span>: [<span class="string">&quot;你的模板id&quot;</span>], <span class="comment">//可以多个</span></span><br><span class="line">  <span class="attr">success</span>: <span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">peopleNum</span> == <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">      uni.<span class="title function_">showToast</span>(&#123;</span><br><span class="line">        <span class="attr">title</span>: <span class="string">&quot;请选择就餐人数&quot;</span>,</span><br><span class="line">        <span class="attr">icon</span>: <span class="string">&quot;error&quot;</span>,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> orderId = <span class="variable language_">this</span>.<span class="property">order</span>.<span class="property">orderId</span>;</span><br><span class="line">      <span class="keyword">const</span> common = <span class="variable language_">this</span>.<span class="property">common</span>;</span><br><span class="line">      <span class="keyword">const</span> price = <span class="variable language_">this</span>.<span class="property">order</span>.<span class="property">orderPrice</span>;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;this.order.orderId&quot;</span>, <span class="variable language_">this</span>.<span class="property">order</span>.<span class="property">orderId</span>);</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;common&quot;</span>, <span class="variable language_">this</span>.<span class="property">common</span>);</span><br><span class="line">      uni.<span class="title function_">navigateTo</span>(&#123;</span><br><span class="line">        <span class="attr">url</span>: <span class="string">`/pages/payPage/payPage?orderId=<span class="subst">$&#123;orderId&#125;</span>&amp;price=<span class="subst">$&#123;price&#125;</span>&amp;common=<span class="subst">$&#123;common&#125;</span>`</span>,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>uni.requestSubscribeMessage</strong>会调用起让用户接收订阅的弹窗，用户确认后就订阅了一次该消息。，然后我们后端就能根据该用户的openId和模板ID对该用户订阅的模板发起一次信息。</p>
+<p>然后我们就能收到消息啦</p>
+<img src="/images/uniapp/message.JPG" class="" title="订阅消息提示" alt="订阅消息提示">
+
+
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><div class="note warning flat"><p>请注意，这里用户授权只是代表该用户订阅了一次，我们后端也只能发送一次消息，如果你想发送多次请多订阅几个模板，然后让用户授权多个模板，后端根据条件发送不同的模板。</p>
+</div>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://perder.github.io">perder</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://perder.github.io/2024/04/22/springboot-uniapp%E5%AE%9E%E7%8E%B0%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%AE%A2%E9%98%85%E6%B6%88%E6%81%AF%E6%8E%A8%E9%80%81/">http://perder.github.io/2024/04/22/springboot-uniapp%E5%AE%9E%E7%8E%B0%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%AE%A2%E9%98%85%E6%B6%88%E6%81%AF%E6%8E%A8%E9%80%81/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://perder.github.io" target="_blank">perder的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/springbooot-uniapp-%E5%BE%AE%E4%BF%A1%E6%8E%A8%E9%80%81/">springbooot,uniapp,微信推送</a></div><div class="post_share"><div class="social-share" data-image="/images/staticImg/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/images/staticImg/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/images/staticImg/wechat.jpg"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/04/05/%E6%88%91%E5%AF%B9vue%E4%B8%8D%E5%90%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%89%80%E5%BA%94%E7%94%A8%E5%88%B0%E5%9C%BA%E6%99%AF%E7%9A%84%E7%90%86%E8%A7%A3/" title="我对vue不同生命周期所应用到场景的理解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">我对vue不同生命周期所应用到场景的理解</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="lv-container" data-id="city" data-uid="MTAyMC81OTY3OS8zNjE0MQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/staticImg/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">perder</div><div class="author-info__description">记录编码过程中遇到的问题</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/perder"><i class="fab fa-github"></i><span>我的gitHub</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">将会记录我编码过程遇到的问题</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">使用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%B9%B3%E5%8F%B0%E9%80%89%E6%8B%A9%E6%A8%A1%E6%9D%BF"><span class="toc-number">2.</span> <span class="toc-text">微信公众平台选择模板</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E5%85%A5-springboot-%E7%9A%84-WXJava-%E4%BE%9D%E8%B5%96"><span class="toc-number">3.</span> <span class="toc-text">引入 springboot 的 WXJava 依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#springboot-%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99"><span class="toc-number">4.</span> <span class="toc-text">springboot 代码编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#uniapp-%E6%8E%88%E6%9D%83%E8%AE%A2%E9%98%85"><span class="toc-number">5.</span> <span class="toc-text">uniapp 授权订阅</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-number">5.0.1.</span> <span class="toc-text">注意</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/22/springboot-uniapp%E5%AE%9E%E7%8E%B0%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%AE%A2%E9%98%85%E6%B6%88%E6%81%AF%E6%8E%A8%E9%80%81/" title="springboot+uniapp实现微信小程序的订阅消息推送">springboot+uniapp实现微信小程序的订阅消息推送</a><time datetime="2024-04-22T03:23:28.000Z" title="发表于 2024-04-22 11:23:28">2024-04-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/05/%E6%88%91%E5%AF%B9vue%E4%B8%8D%E5%90%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%89%80%E5%BA%94%E7%94%A8%E5%88%B0%E5%9C%BA%E6%99%AF%E7%9A%84%E7%90%86%E8%A7%A3/" title="我对vue不同生命周期所应用到场景的理解">我对vue不同生命周期所应用到场景的理解</a><time datetime="2024-04-05T07:35:48.000Z" title="发表于 2024-04-05 15:35:48">2024-04-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/04/vue%E7%BB%84%E4%BB%B6%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="vue组件加载过程中遇到的问题">vue组件加载过程中遇到的问题</a><time datetime="2024-04-04T13:10:12.000Z" title="发表于 2024-04-04 21:10:12">2024-04-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/03/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%AB%98%E5%BE%B7%E5%9C%B0%E5%9B%BE%E7%BB%84%E4%BB%B6/" title="自定义高德地图组件">自定义高德地图组件</a><time datetime="2024-04-03T08:42:59.000Z" title="发表于 2024-04-03 16:42:59">2024-04-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/03/29/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95%E9%A2%98-JS/" title="前端面试题-JS">前端面试题-JS</a><time datetime="2024-03-29T00:12:02.000Z" title="发表于 2024-03-29 08:12:02">2024-03-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By perder</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(()=>{
+  const loadLivere = () => {
+    if (typeof LivereTower === 'object') window.LivereTower.init()
+    else {
+      (function(d, s) {
+          var j, e = d.getElementsByTagName(s)[0];
+          if (typeof LivereTower === 'function') { return; }
+          j = d.createElement(s);
+          j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+          j.async = true;
+          e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    }
+  }
+
+  if ('Livere' === 'Livere' || !false) {
+    if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+    else loadLivere()
+  } else {
+    window.loadOtherComment = loadLivere
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/click-show-text.min.js" data-mobile="true" data-text="焱,牸,媔,堷,漈,類,浗,哋,潙,芣,糧,牸,姒,鎅,恏" data-fontsize="15px" data-random="true" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
